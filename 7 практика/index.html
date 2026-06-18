@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адаптив</title>
+    <style>
+        * { margin: 0; }
+        nav { display: flex; background: #333; flex-wrap: wrap; }
+        nav a { color: #fff; padding: 15px; flex: 1; text-align: center; text-decoration: none; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
+        .card { background: #f4f4f4; padding: 20px; text-align: center; border-radius: 8px; }
+        @media (max-width:768px) { .grid { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width:480px) { .grid { grid-template-columns: 1fr; } nav { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <nav><a href="#">Главная</a><a href="#">Услуги</a><a href="#">О нас</a><a href="#">Контакты</a></nav>
+    <div class="grid">
+        <div class="card">1</div>
+        <div class="card">2</div>
+        <div class="card">3</div>
+        <div class="card">4</div>
+        <div class="card">5</div>
+        <div class="card">6</div>
+    </div>
+</body>
+</html>
