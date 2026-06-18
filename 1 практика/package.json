@@ -1,0 +1,9 @@
+{
+  "name": "express-orm-app",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sequelize": "^6.32.1",
+    "sqlite3": "^5.1.6",
+    "ejs": "^3.1.9"
+  }
+}

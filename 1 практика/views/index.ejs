@@ -1,0 +1,13 @@
+<h2>Товары</h2>
+<ul>
+  <% items.forEach(item => { %>
+    <li><%= item.name %> - <%= item.price %> руб.</li>
+  <% }) %>
+</ul>
+
+<h3>Добавить товар</h3>
+<form method="POST" action="/items">
+  <input name="name" placeholder="Название" required>
+  <input name="price" placeholder="Цена" type="number" step="0.01" required>
+  <button type="submit">Сохранить</button>
+</form>
