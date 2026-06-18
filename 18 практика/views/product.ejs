@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title><%= product.name %></title></head>
+<body>
+    <a href="/">← Назад</a>
+    <h1><%= product.name %></h1>
+    <div>⭐ <%= avg %> / 5 (<%= reviews.length %> отзывов)</div>
+    
+    <form method="POST" action="/product/<%= product.id %>/review">
+        <input name="author" placeholder="Имя" required>
+        <select name="rating" required>
+            <option value="5">5</option><option value="4">4</option>
+            <option value="3">3</option><option value="2">2</option><option value="1">1</option>
+        </select>
+        <textarea name="text" placeholder="Отзыв..." required></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+    
+    <% reviews.forEach(r => { %>
+        <div>
+            <b><%= r.author %></b> ⭐ <%= r.rating %>
+            <span><%= r.date %></span>
+            <a href="/review/delete/<%= r.id %>" onclick="return confirm('Удалить?')">✕</a>
+            <p><%= r.text %></p>
+        </div>
+    <% }) %>
+</body>
+</html>

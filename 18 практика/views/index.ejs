@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head><title>Отзывы</title></head>
+<body>
+    <h1>📦 Товары</h1>
+    <% products.forEach(p => { %>
+        <div><a href="/product/<%= p.id %>"><%= p.name %></a></div>
+    <% }) %>
+</body>
+</html>
