@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSS Анимация</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; gap: 30px; height: 100vh; margin: 0; background: #1a1a2e; }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f0f0f0;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .bounce {
+            width: 80px;
+            height: 80px;
+            background: #ff6b6b;
+            border-radius: 10px;
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-100px); background: #ffd93d; border-radius: 50%; }
+        }
+        
+        .pulse {
+            width: 80px;
+            height: 80px;
+            background: #6bcb77;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="bounce"></div>
+    <div class="pulse"></div>
+</body>
+</html>
