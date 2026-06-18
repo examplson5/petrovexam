@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Интерактивная карта</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map { height: 500px; width: 100%; }
+        body { margin: 0; font-family: Arial; }
+        .info { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 1000; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="info" id="info">Нажмите на карту</div>
+
+    <script>
+        // Инициализация карты
+        const map = L.map('map').setView([55.751244, 37.618423], 10);
+
+        // Слой карты
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Маркер
+        const marker = L.marker([55.751244, 37.618423]).addTo(map);
+        marker.bindPopup('Москва');
+
+        // Клик по карте
+        map.on('click', function(e) {
+            const { lat, lng } = e.latlng;
+            document.getElementById('info').textContent = `Широта: ${lat.toFixed(4)}, Долгота: ${lng.toFixed(4)}`;
+
+            // Добавить маркер по клику
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup(`Координаты: ${lat.toFixed(4)}, ${lng.toFixed(4)}`)
+                .openPopup();
+        });
+
+        // Круг
+        L.circle([55.751244, 37.618423], { radius: 5000, color: 'blue', fillOpacity: 0.1 }).addTo(map);
+    </script>
+</body>
+</html>
