@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Привет, УКИТ!</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 100px; }
+        .text { font-size: 48px; color: #2ecc71; }
+        input { padding: 10px; width: 300px; }
+        button { padding: 10px 30px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="text"><%= text %></div>
+    <form method="POST">
+        <input name="text" placeholder="Введите текст..." value="<%= text %>">
+        <button type="submit">Изменить</button>
+    </form>
+</body>
+</html>
