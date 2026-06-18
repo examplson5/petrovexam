@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Корзина</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+        .container { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .products, .cart { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { margin-bottom: 15px; }
+        .product { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ddd; }
+        .product button { padding: 5px 15px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .product button:hover { background: #0056b3; }
+        .cart-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .cart-item .remove { color: red; cursor: pointer; font-weight: bold; }
+        .total { margin-top: 15px; font-size: 18px; font-weight: bold; text-align: right; }
+        .empty { color: #999; text-align: center; padding: 20px; }
+        .badge { background: #ff6b6b; color: white; border-radius: 50%; padding: 2px 8px; font-size: 12px; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🛒 Магазин <span class="badge" id="cartCount">0</span></h1>
+    <div class="container">
+        <div class="products" id="products"></div>
+        <div class="cart">
+            <h2>Корзина</h2>
+            <div id="cartItems"><div class="empty">Корзина пуста</div></div>
+            <div class="total" id="total">Итого: 0 ₽</div>
+        </div>
+    </div>
+
+    <script>
+        // Товары
+        const products = [
+            { id: 1, name: 'iPhone 15', price: 99990 },
+            { id: 2, name: 'Samsung S24', price: 89990 },
+            { id: 3, name: 'Google Pixel 8', price: 79990 },
+            { id: 4, name: 'Xiaomi Mi 14', price: 69990 }
+        ];
+
+        // Корзина
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Сохранение
+        function save() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            render();
+        }
+
+        // Добавление
+        function add(id) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty++;
+            } else {
+                const product = products.find(p => p.id === id);
+                cart.push({ ...product, qty: 1 });
+            }
+            save();
+        }
+
+        // Удаление
+        function remove(id) {
+            cart = cart.filter(i => i.id !== id);
+            save();
+        }
+
+        // Изменение количества
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) remove(id);
+                else save();
+            }
+        }
+
+        // Рендер
+        function render() {
+            // Товары
+            const productsDiv = document.getElementById('products');
+            productsDiv.innerHTML = '<h2>Товары</h2>' + products.map(p => `
+                <div class="product">
+                    <span>${p.name} — ${p.price.toLocaleString()} ₽</span>
+                    <button onclick="add(${p.id})">В корзину</button>
+                </div>
+            `).join('');
+
+            // Корзина
+            const cartDiv = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartDiv.innerHTML = '<div class="empty">Корзина пуста</div>';
+            } else {
+                cartDiv.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <span>${item.name} (${item.qty})</span>
+                        <span>
+                            <button onclick="changeQty(${item.id}, -1)">−</button>
+                            <button onclick="changeQty(${item.id}, 1)">+</button>
+                            <span class="remove" onclick="remove(${item.id})">✕</span>
+                        </span>
+                    </div>
+                `).join('');
+            }
+
+            // Итого
+            const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+            document.getElementById('total').textContent = `Итого: ${total.toLocaleString()} ₽`;
+            document.getElementById('cartCount').textContent = cart.reduce((sum, i) => sum + i.qty, 0);
+        }
+
+        render();
+    </script>
+</body>
+</html>
