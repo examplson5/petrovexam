@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Список элементов</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 50px auto; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; }
+    .delete { color: red; text-decoration: none; }
+    form { display: flex; gap: 10px; margin-top: 20px; }
+    input { flex: 1; padding: 8px; }
+    button { padding: 8px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Список элементов</h2>
+  
+  <ul>
+    <% items.forEach(item => { %>
+      <li>
+        <span><%= item.id %>. <%= item.name %></span>
+        <a href="/delete/<%= item.id %>" class="delete">✕</a>
+      </li>
+    <% }) %>
+  </ul>
+
+  <form method="POST" action="/add">
+    <input name="name" placeholder="Название элемента..." required>
+    <button type="submit">Добавить</button>
+  </form>
+</body>
+</html>
