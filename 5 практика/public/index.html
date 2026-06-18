@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Поиск</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 50px auto; }
+        #results { margin-top: 20px; }
+        .item { padding: 10px; border-bottom: 1px solid #ddd; }
+        .loading { color: #666; }
+        .no-results { color: #999; }
+        input { padding: 8px; width: 70%; }
+        button { padding: 8px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Поиск</h2>
+    <input type="text" id="searchInput" placeholder="Введите запрос...">
+    <button onclick="search()">Найти</button>
+    <div id="results"></div>
+
+    <script>
+        function search() {
+            const query = document.getElementById('searchInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+
+            if (!query) {
+                resultsDiv.innerHTML = '<div class="no-results">Введите запрос</div>';
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">Загрузка...</div>';
+
+            // AJAX-запрос
+            fetch(`/search?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        resultsDiv.innerHTML = '<div class="no-results">Ничего не найдено</div>';
+                    } else {
+                        resultsDiv.innerHTML = data.map(item => 
+                            `<div class="item">${item}</div>`
+                        ).join('');
+                    }
+                })
+                .catch(() => {
+                    resultsDiv.innerHTML = '<div class="no-results">Ошибка</div>';
+                });
+        }
+
+        // Поиск по Enter и автопоиск
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') search();
+        });
+
+        let timeout;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(search, 300);
+        });
+    </script>
+</body>
+</html>
