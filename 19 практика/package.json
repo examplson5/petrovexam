@@ -1,0 +1,8 @@
+{
+  "name": "reviews-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.22.2"
+  }
+}
