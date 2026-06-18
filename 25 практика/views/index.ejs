@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Анализ данных</title>
+    <style>
+        body { font-family: Arial; max-width: 1000px; margin: 30px auto; padding: 20px; }
+        .upload { border: 2px dashed #ccc; padding: 40px; text-align: center; border-radius: 8px; }
+        .upload input[type="file"] { display: none; }
+        .upload label { background: #007bff; color: white; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background: #f5f5f5; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .stat-card { background: #f8f9fa; padding: 15px; border-radius: 8px; }
+        .stat-card h4 { margin: 0 0 5px; }
+        .btn { padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>📊 Анализ данных</h1>
+    
+    <div class="upload">
+        <h3>Загрузите CSV-файл</h3>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" accept=".csv" required>
+            <label for="file">Выбрать файл</label>
+            <button type="submit" class="btn">Загрузить</button>
+        </form>
+    </div>
+
+    <% if (data.length > 0) { %>
+        <h2>📋 Данные (<%= data.length %> записей)</h2>
+        
+        <div style="max-height: 300px; overflow-y: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <% Object.keys(data[0]).forEach(function(key) { %>
+                            <th><%- key %></th>
+                        <% }); %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.slice(0, 20).forEach(function(row) { %>
+                        <tr>
+                            <% Object.values(row).forEach(function(val) { %>
+                                <td><%- val %></td>
+                            <% }); %>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>📊 Статистика</h2>
+        <div class="stats">
+            <% if (stats) { %>
+                <% Object.keys(stats).forEach(function(key) { %>
+                    <div class="stat-card">
+                        <h4><%- key %></h4>
+                        <div>Min: <%- stats[key].min %></div>
+                        <div>Max: <%- stats[key].max %></div>
+                        <div>Avg: <%- stats[key].avg.toFixed(2) %></div>
+                        <div>Median: <%- stats[key].median %></div>
+                        <div>Count: <%- stats[key].count %></div>
+                    </div>
+                <% }); %>
+            <% } %>
+        </div>
+    <% } %>
+</body>
+</html>
