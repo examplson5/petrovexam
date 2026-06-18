@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= project.name %></title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: 30px auto; padding: 20px; }
+        .back { color: #007bff; text-decoration: none; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background: #f5f5f5; }
+        .form { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .form input, .form select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin: 5px; }
+        .form button { padding: 8px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .delete { color: red; cursor: pointer; }
+        .btn-export { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-export:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back">← Назад</a>
+    <h1><%= project.name %></h1>
+    
+    <!-- Добавить задачу -->
+    <div class="form">
+        <h3>➕ Добавить задачу</h3>
+        <form method="POST" action="/project/<%= id %>/task">
+            <input name="name" placeholder="Название задачи" required>
+            <input name="duration" placeholder="Длительность (1d, 2w...)" value="1d">
+            <input name="depends" placeholder="Зависимости (id, id...)">
+            <input name="priority" placeholder="Приоритет (0-1000)" value="0">
+            <input name="resources" placeholder="Ресурсы (Имя1, Имя2...)">
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+    
+    <!-- Список задач -->
+    <h2>📋 Задачи</h2>
+    <% if (project.tasks.length === 0) { %>
+        <p>Нет задач</p>
+    <% } else { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Длительность</th>
+                    <th>Зависимости</th>
+                    <th>Приоритет</th>
+                    <th>Ресурсы</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% project.tasks.forEach(t => { %>
+                    <tr>
+                        <td><%= t.id %></td>
+                        <td><%= t.name %></td>
+                        <td><%= t.duration %></td>
+                        <td><%= t.depends || '-' %></td>
+                        <td><%= t.priority %></td>
+                        <td><%= t.resources || '-' %></td>
+                        <td>
+                            <span class="delete" onclick="deleteTask('<%= t.id %>')">🗑️</span>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+    
+    <!-- Экспорт -->
+    <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <a href="/project/<%= id %>/export" class="btn-export">📥 Экспорт .tjp</a>
+        <button class="btn-export" onclick="generateReport()">📊 Сгенерировать отчёт</button>
+    </div>
+    
+    <div id="result" style="margin-top: 20px;"></div>
+    
+    <script>
+        async function deleteTask(taskId) {
+            if (!confirm('Удалить задачу?')) return;
+            const res = await fetch(`/project/<%= id %>/task/${taskId}`, { method: 'DELETE' });
+            if (res.ok) location.reload();
+        }
+        
+        async function generateReport() {
+            const result = document.getElementById('result');
+            result.innerHTML = '⏳ Генерация...';
+            
+            const res = await fetch(`/project/<%= id %>/generate`, { method: 'POST' });
+            const data = await res.json();
+            
+            if (data.success) {
+                result.innerHTML = '✅ ' + data.message;
+            } else {
+                result.innerHTML = '❌ ' + data.error;
+            }
+        }
+    </script>
+</body>
+</html>

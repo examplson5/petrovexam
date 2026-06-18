@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Отправка email</title>
+    <style>
+        body { font-family: Arial; max-width: 500px; margin: 50px auto; padding: 20px; }
+        h1 { text-align: center; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
+        textarea { height: 150px; resize: vertical; }
+        button { padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-size: 18px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; display: none; }
+        .success { background: #d4edda; color: #155724; display: block; }
+        .error { background: #f8d7da; color: #721c24; display: block; }
+    </style>
+</head>
+<body>
+    <h1>📧 Отправить письмо</h1>
+    
+    <form id="emailForm">
+        <input type="email" id="to" placeholder="Кому (email)" required>
+        <input type="text" id="subject" placeholder="Тема письма" required>
+        <textarea id="message" placeholder="Текст письма..." required></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const to = document.getElementById('to').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                const response = await fetch('/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ to, subject, message })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'success';
+                    resultDiv.textContent = '✅ Письмо отправлено!';
+                    document.getElementById('emailForm').reset();
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.textContent = '❌ ' + data.error;
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.textContent = '❌ Ошибка соединения';
+            }
+        });
+    </script>
+</body>
+</html>

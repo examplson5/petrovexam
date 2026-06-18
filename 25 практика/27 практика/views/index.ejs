@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TaskJuggler Projects</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .project { padding: 15px; border: 1px solid #ddd; margin: 10px 0; border-radius: 8px; }
+        .project a { text-decoration: none; color: #007bff; font-size: 18px; }
+        .form { background: #f8f9fa; padding: 20px; border-radius: 8px; }
+        input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>📋 TaskJuggler Projects</h1>
+    
+    <div class="form">
+        <h3>Создать проект</h3>
+        <form method="POST" action="/project">
+            <input name="name" placeholder="Название проекта" required>
+            <button type="submit">Создать</button>
+        </form>
+    </div>
+    
+    <h2>Проекты</h2>
+    <% if (projects.length === 0) { %>
+        <p>Нет проектов</p>
+    <% } else { %>
+        <% projects.forEach(p => { %>
+            <div class="project">
+                <a href="/project/<%= p.id %>"><%= p.name %></a>
+                <small>(<%= p.tasks.length %> задач)</small>
+            </div>
+        <% }) %>
+    <% } %>
+</body>
+</html>
